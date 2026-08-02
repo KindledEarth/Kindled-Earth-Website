@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kindled Earth — a live, global meditation space</title>
+<meta name="description" content="Kindled Earth is a free space to meditate and send love around the world with others, live. Choose an intention — lifting the planet's energy, sending love, peace, gratitude, or healing — and see, on a living map, who else is with you right now.">
+<meta name="keywords" content="global meditation, collective meditation, online meditation community, send love to the world, world meditation map, meditate together online, group meditation, sending healing energy">
+<link rel="canonical" href="https://kindledearth.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kindled Earth">
+<meta property="og:title" content="Kindled Earth — a live, global meditation space">
+<meta property="og:description" content="Choose an intention. Join others meditating and sending love with you right now, from wherever they are in the world.">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Work+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg-deep: #0a0f1e;
+    --bg-panel: #121a30;
+    --bg-panel-2: #0e1526;
+    --text-main: #f2efe9;
+    --text-muted: #8892ac;
+    --text-faint: #565f7a;
+    --gold: #e8b75d;
+    --rose: #e0879c;
+    --violet: #9c8fe0;
+    --teal: #5fbfb3;
+    --green: #8fbf7f;
+    --hairline: rgba(242,239,233,0.09);
+    --hairline-strong: rgba(242,239,233,0.18);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    background: radial-gradient(ellipse 120% 80% at 50% -10%, #162040 0%, var(--bg-deep) 55%);
+    color: var(--text-main);
+    font-family: 'Work Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height:100vh;
+  }
+
+  ::selection{ background: rgba(232,183,93,0.3); }
+
+  :focus-visible{
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .container{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ---------- HERO ---------- */
+
+  header.hero{
+    padding: 72px 0 56px;
+    text-align:center;
+    position: relative;
+  }
+
+  .brand-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom: 44px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-mark{
+    width:8px; height:8px; border-radius:50%;
+    background: var(--gold);
+    box-shadow: 0 0 12px 2px rgba(232,183,93,0.7);
+  }
+  .brand-name{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color: var(--text-muted);
+  }
+
+  .site-nav{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .site-nav a{
+    font-family: 'Work Sans', sans-serif;
+    font-size: 12.5px;
+    text-decoration:none;
+    color: var(--text-muted);
+    padding: 7px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--hairline-strong);
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+  }
+  .site-nav a:hover{
+    color: var(--text-main);
+    border-color: var(--text-muted);
+  }
+  .site-nav a.donate-link{
+    color: #10141f;
+    background: var(--gold);
+    border-color: var(--gold);
+    font-weight: 600;
+  }
+  .site-nav a.donate-link:hover{
+    filter: brightness(1.08);
+  }
+
+  @media (max-width: 480px){
+    .brand-row{ flex-direction: column; gap: 14px; }
+    .site-nav a{ font-size: 12px; padding: 6px 12px; }
+  }
+
+  h1.headline{
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 500;
+    line-height: 1.15;
+    max-width: 720px;
+    margin: 0 auto 18px;
+    font-style: italic;
+    font-optical-sizing: auto;
+  }
+  h1.headline em{
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .subhead{
+    color: var(--text-muted);
+    font-size: 16px;
+    max-width: 480px;
+    margin: 0 auto 48px;
+    line-height:1.6;
+  }
+
+  .hero-globe-wrap{
+    position: relative;
+    width: min(340px, 78vw);
+    aspect-ratio: 1;
+    margin: 0 auto 28px;
+  }
+
+  .live-count{
+    margin-top: 8px;
+  }
+  .live-count .number{
+    font-family:'Space Mono', monospace;
+    font-size: 40px;
+    font-weight:700;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+  }
+  .live-count .label{
+    color: var(--text-muted);
+    font-size:14px;
+    letter-spacing:0.02em;
+  }
+
+  /* ---------- GLOBE (shared svg styling) ---------- */
+
+  svg.globe{ width:100%; height:100%; overflow:visible; }
+  .globe-grid{
+    fill:none;
+    stroke: var(--hairline-strong);
+    stroke-width: 1;
+  }
+  .globe-outline{
+    fill: rgba(242,239,233,0.02);
+    stroke: var(--hairline-strong);
+    stroke-width: 1;
+  }
+  .dot-core{ animation: breathe 4.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .dot-halo{ animation: breathe 4.2s ease-in-out infinite; opacity:0.35; transform-box: fill-box; transform-origin: center; }
+
+  @keyframes breathe{
+    0%, 100% { transform: scale(0.85); }
+    50% { transform: scale(1.15); }
+  }
+
+  /* ---------- TOPICS GRID ---------- */
+
+  main{ padding-bottom: 90px; }
+
+  .section-label{
+    display:flex;
+    align-items:baseline;
+    gap: 14px;
+    margin: 8px 0 24px;
+  }
+  .section-label .rule{
+    flex:1;
+    height:1px;
+    background: var(--hairline);
+  }
+
+  .topics-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 18px;
+  }
+
+  .topic-card{
+    background: linear-gradient(165deg, var(--bg-panel) 0%, var(--bg-panel-2) 100%);
+    border: 1px solid var(--hairline);
+    border-radius: 18px;
+    padding: 26px 24px 22px;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+    display:flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+    position: relative;
+    overflow:hidden;
+  }
+  .topic-card:hover, .topic-card:focus-visible{
+    border-color: var(--tc-color, var(--hairline-strong));
+    transform: translateY(-2px);
+  }
+  .topic-card::after{
+    content:"";
+    position:absolute;
+    inset:auto -30% -60% auto;
+    width:180px; height:180px;
+    background: radial-gradient(circle, var(--tc-color, transparent) 0%, transparent 70%);
+    opacity: 0.12;
+    pointer-events:none;
+  }
+
+  .topic-glyph{
+    width:44px; height:44px;
+    color: var(--tc-color);
+  }
+
+  .topic-name{
+    font-size: 19px;
+    font-weight: 500;
+  }
+  .topic-desc{
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height:1.5;
+    flex:1;
+  }
+
+  .topic-footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:4px;
+    padding-top: 14px;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .topic-count{
+    font-family:'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .topic-count .n{
+    color: var(--text-main);
+    font-weight:700;
+    font-size:15px;
+  }
+
+  .topic-cta{
+    font-size:13px;
+    letter-spacing:0.04em;
+    color: var(--tc-color);
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .topic-cta svg{ width:12px; height:12px; }
+
+  .mini-globe{
+    width: 54px; height:54px;
+    opacity:0.9;
+  }
+
+  /* ---------- FOOTNOTE ---------- */
+
+  .note{
+    margin-top: 40px;
+    text-align:center;
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height:1.6;
+    max-width: 480px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .note .all-time{
+    font-family:'Space Mono', monospace;
+    color: var(--text-muted);
+  }
+
+  /* ---------- OVERLAY / SESSION ---------- */
+
+  .overlay{
+    position: fixed;
+    inset:0;
+    background: rgba(6,9,18,0.88);
+    backdrop-filter: blur(6px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index: 100;
+    opacity:0;
+    pointer-events:none;
+    transition: opacity 0.35s ease;
+    padding: 24px;
+  }
+  .overlay.open{ opacity:1; pointer-events:all; }
+
+  .panel{
+    background: linear-gradient(165deg, var(--bg-panel) 0%, var(--bg-panel-2) 100%);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 22px;
+    max-width: 420px;
+    width:100%;
+    padding: 36px 32px;
+    text-align:center;
+    position:relative;
+  }
+
+  .panel-close{
+    position:absolute;
+    top:16px; right:16px;
+    background:none;
+    border:none;
+    color: var(--text-muted);
+    cursor:pointer;
+    width:32px; height:32px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+  }
+  .panel-close:hover{ color: var(--text-main); background: rgba(255,255,255,0.06); }
+
+  .panel-glyph{
+    width:52px; height:52px;
+    margin: 0 auto 18px;
+    color: var(--tc-color);
+  }
+
+  .panel h2{
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .panel p.desc{
+    color: var(--text-muted);
+    font-size: 14px;
+    margin: 0 0 26px;
+    line-height:1.55;
+  }
+
+  select.region-select{
+    width:100%;
+    background: var(--bg-deep);
+    color: var(--text-main);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 10px;
+    padding: 13px 14px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14px;
+    margin-bottom: 20px;
+    appearance:none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892ac' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position: right 16px center;
+  }
+
+  .begin-btn{
+    width:100%;
+    background: var(--tc-color);
+    color: #10141f;
+    border:none;
+    border-radius: 10px;
+    padding: 14px 0;
+    font-size: 15px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:'Work Sans', sans-serif;
+    letter-spacing:0.01em;
+    transition: filter 0.2s ease;
+  }
+  .begin-btn:hover{ filter: brightness(1.08); }
+  .begin-btn:disabled{ opacity:0.5; cursor:not-allowed; }
+
+  /* ---------- SESSION (active) VIEW ---------- */
+
+  .session-view{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+  }
+  .session-view.active{ display:flex; }
+  .session-setup.hidden{ display:none; }
+
+  .session-globe-wrap{
+    width: 200px; height:200px;
+    position:relative;
+    margin-bottom: 20px;
+  }
+  .session-globe-wrap svg{ width:100%; height:100%; }
+
+  .session-thanks{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 19px;
+    color: var(--text-main);
+    max-width: 320px;
+    line-height:1.5;
+    margin: 6px 0 18px;
+  }
+
+  .music-suggestion{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    text-decoration:none;
+    background: rgba(29,185,84,0.1);
+    border: 1px solid rgba(29,185,84,0.35);
+    color: var(--text-main);
+    font-size: 13px;
+    padding: 9px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .music-suggestion:hover{
+    background: rgba(29,185,84,0.18);
+    border-color: rgba(29,185,84,0.55);
+  }
+  .music-suggestion svg{ width:15px; height:15px; flex-shrink:0; }
+
+  .session-meta{
+    display:flex;
+    gap: 22px;
+    margin-bottom: 26px;
+  }
+  .session-meta .item{ text-align:center; }
+  .session-meta .item .v{
+    font-family:'Space Mono', monospace;
+    font-size:18px;
+    font-weight:700;
+  }
+  .session-meta .item .k{
+    font-size:11px;
+    color: var(--text-muted);
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+  }
+
+  .leave-btn{
+    background:none;
+    border: 1px solid var(--hairline-strong);
+    color: var(--text-muted);
+    border-radius: 10px;
+    padding: 11px 26px;
+    font-size: 13px;
+    cursor:pointer;
+    font-family:'Work Sans', sans-serif;
+  }
+  .leave-btn:hover{ color: var(--text-main); border-color: var(--text-muted); }
+
+  @media (prefers-reduced-motion: reduce){
+    .dot-core, .dot-halo{ animation: none !important; }
+    .topic-card{ transition:none; }
+  }
+
+  @media (max-width: 560px){
+    header.hero{ padding: 52px 0 40px; }
+    .topics-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- ABOUT / SEO SECTION ---------- */
+
+  .about-section{
+    margin-top: 72px;
+    padding-top: 56px;
+    border-top: 1px solid var(--hairline);
+  }
+  .about-section h2{
+    font-size: clamp(24px, 3.4vw, 32px);
+    font-style: italic;
+    margin-bottom: 20px;
+    max-width: 560px;
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 32px;
+    margin-top: 32px;
+  }
+  .about-grid h3{
+    font-size: 15px;
+    font-style: normal;
+    color: var(--gold);
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+  }
+  .about-grid p, .about-section > p{
+    color: var(--text-muted);
+    font-size: 14.5px;
+    line-height: 1.7;
+    max-width: 620px;
+  }
+
+  /* ---------- FOOTER ---------- */
+
+  footer.site-footer{
+    margin-top: 64px;
+    padding: 32px 0 8px;
+    border-top: 1px solid var(--hairline);
+    display:flex;
+    flex-wrap: wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap: 16px;
+  }
+  footer.site-footer .foot-links{
+    display:flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  footer.site-footer a{
+    color: var(--text-muted);
+    text-decoration:none;
+    font-size: 13px;
+  }
+  footer.site-footer a:hover{ color: var(--text-main); }
+  footer.site-footer .copyright{
+    color: var(--text-faint);
+    font-size: 12.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="hero">
+    <div class="brand-row">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span class="brand-name">Kindled Earth</span>
+      </div>
+      <nav class="site-nav">
+        <a href="mailto:hello@kindledearth.com">Contact</a>
+        <a class="donate-link" href="https://your-donate-link-here.example.com" target="_blank" rel="noopener">Donate</a>
+      </nav>
+    </div>
+
+    <h1 class="headline">A quiet <em>moment</em>, held<br>by everyone doing it with you.</h1>
+    <p class="subhead">Choose an intention below. Wherever you are, you'll join others doing the same thing, right now, somewhere on the map.</p>
+
+    <div class="hero-globe-wrap">
+      <svg class="globe" id="hero-globe" viewBox="0 0 300 300"></svg>
+    </div>
+
+    <div class="live-count">
+      <div class="number" id="hero-count">0</div>
+      <div class="label">people are in a session with you right now</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="section-label">
+      <span class="eyebrow">Choose an intention</span>
+      <span class="rule"></span>
+    </div>
+
+    <div class="topics-grid" id="topics-grid"></div>
+
+    <p class="note">
+      Live counts reflect people currently in a session (not a lifetime total). Regions are self-selected and shown only as an approximate glow on the globe — never an exact location.
+      <br>
+      <span class="all-time" id="all-time-count">— </span> sessions have been held here since this page opened its doors.
+    </p>
+
+    <section class="about-section" id="about">
+      <h2>A free, live space for global meditation</h2>
+      <p>
+        Kindled Earth is a place to meditate and send love around the world alongside other people, in real time. There's no
+        account to create and nothing to download — pick an intention, choose the region you're joining from, and you're in
+        a session with everyone else doing the same thing at that moment, anywhere on Earth. The live map fills in as more
+        people join, so a solo sit turns into something visibly shared.
+      </p>
+
+      <div class="about-grid">
+        <div>
+          <h3>Why a live world map</h3>
+          <p>
+            Most meditation apps are private by design — just you and a timer. Kindled Earth adds a second layer: a
+            simple, honest view of who else is meditating with you right now, and roughly where in the world they are.
+            It's a small way to feel less alone in a practice that's usually solitary.
+          </p>
+        </div>
+        <div>
+          <h3>Send love, lift the world, find stillness</h3>
+          <p>
+            Each intention on this page — lifting the planet's energy, sending love to the world, holding space for peace,
+            practicing gratitude, or sending healing to people who are struggling — is its own live room with its own
+            counter and its own map, so you can join whichever one matches how you want to spend the next few minutes.
+          </p>
+        </div>
+        <div>
+          <h3>Free, anonymous, always open</h3>
+          <p>
+            Kindled Earth doesn't ask for your name, your exact location, or a login. It's free to use, runs entirely in
+            your browser, and is open any time — there's no scheduled start time to wait for. Meditation and sending love
+            to the world are both practices you can begin the moment you feel like it.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="copyright">© <span id="footer-year"></span> Kindled Earth</div>
+      <div class="foot-links">
+        <a href="mailto:hello@kindledearth.com">Contact</a>
+        <a href="https://your-donate-link-here.example.com" target="_blank" rel="noopener">Support this project</a>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="panel" id="panel" style="--tc-color:#fff;">
+    <button class="panel-close" id="panel-close" aria-label="Close">✕</button>
+
+    <div class="session-setup" id="session-setup">
+      <div class="panel-glyph" id="setup-glyph"></div>
+      <h2 id="setup-title">Topic</h2>
+      <p class="desc" id="setup-desc">Description</p>
+
+      <select class="region-select" id="region-select" aria-label="Where are you joining from">
+        <option value="" disabled selected>Where are you joining from?</option>
+      </select>
+
+      <button class="begin-btn" id="begin-btn">Begin</button>
+    </div>
+
+    <div class="session-view" id="session-view">
+      <div class="session-globe-wrap">
+        <svg class="globe" id="session-globe" viewBox="0 0 200 200"></svg>
+      </div>
+      <div class="session-thanks" id="session-thanks">Thank you for joining in.</div>
+      <a class="music-suggestion" id="music-suggestion" href="https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Suggested meditation music on Spotify
+      </a>
+      <div class="session-meta">
+        <div class="item">
+          <div class="v" id="session-timer">00:00</div>
+          <div class="k">Time</div>
+        </div>
+        <div class="item">
+          <div class="v" id="session-topic-count">0</div>
+          <div class="k">With you</div>
+        </div>
+      </div>
+      <button class="leave-btn" id="leave-btn">Leave session</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+
+  /* ---------------- DATA ---------------- */
+
+  const TOPICS = [
+    {
+      id:'earth', name:'Lift the Earth', color:'var(--violet)', colorHex:'#9c8fe0',
+      desc:"A collective meditation to raise the energy of the planet, one steady breath at a time.",
+      phrases:[
+        "Feel the ground beneath you, solid and patient.",
+        "Let your energy rise slowly, like light through water.",
+        "You are one steady point in a much larger field."
+      ],
+      glyph: `<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M30 6 C 42 6 50 16 50 28 C 50 40 40 46 30 46" stroke-linecap="round"/><path d="M30 14 C 38 14 44 20 44 28 C 44 36 37 40 30 40" stroke-linecap="round" opacity="0.6"/><circle cx="30" cy="46" r="2.4" fill="currentColor" stroke="none"/></svg>`
+    },
+    {
+      id:'love', name:'Send Love to the Planet', color:'var(--rose)', colorHex:'#e0879c',
+      desc:"Direct a quiet wave of warmth outward, toward the whole Earth and everyone on it.",
+      phrases:[
+        "Picture the whole Earth, small and bright, held gently.",
+        "Let warmth move outward without needing anything back.",
+        "Love travels further than you think it can."
+      ],
+      glyph: `<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M30 44 C 12 32 12 16 24 14 C 28 13.2 30 17 30 20 C 30 17 32 13.2 36 14 C 48 16 48 32 30 44 Z" stroke-linejoin="round"/></svg>`
+    },
+    {
+      id:'peace', name:'Peace Among People', color:'var(--teal)', colorHex:'#5fbfb3',
+      desc:"Hold humanity, in all its differences, inside one shared and steady field of calm.",
+      phrases:[
+        "Everyone, everywhere, breathing the same air.",
+        "Differences held gently, without needing to resolve them.",
+        "Peace is not agreement. It's enough room for everyone."
+      ],
+      glyph: `<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="24" cy="30" r="14"/><circle cx="36" cy="30" r="14"/></svg>`
+    },
+    {
+      id:'gratitude', name:'Gratitude for Life', color:'var(--gold)', colorHex:'#e8b75d',
+      desc:"Sit for a while with plain thankfulness for the fact of being alive at all.",
+      phrases:[
+        "You did not have to be here. And yet.",
+        "Notice one ordinary thing. Let it be enough.",
+        "Thank the parts of today that asked nothing of you."
+      ],
+      glyph: `<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="30" cy="30" r="9"/><g stroke-linecap="round"><path d="M30 8v7"/><path d="M30 45v7"/><path d="M8 30h7"/><path d="M45 30h7"/><path d="M14 14l5 5"/><path d="M41 41l5 5"/><path d="M46 14l-5 5"/><path d="M19 41l-5 5"/></g></svg>`
+    },
+    {
+      id:'healing', name:'Healing for All Beings', color:'var(--green)', colorHex:'#8fbf7f',
+      desc:"Offer a quiet intention of healing to anyone, anywhere, who is carrying something heavy.",
+      phrases:[
+        "Somewhere, someone is having a hard day. This is for them too.",
+        "Healing doesn't need to be earned.",
+        "Hold whoever comes to mind, gently, and let them go."
+      ],
+      glyph: `<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M30 46 C 30 46 14 36 14 24 C 14 17 20 13 26 16 C 28 17 30 20 30 20 C 30 20 32 17 34 16 C 40 13 46 17 46 24 C 46 36 30 46 30 46 Z" opacity="0.5"/><path d="M22 30h6l3-7 4 12 3-5h6" stroke-linejoin="round" stroke-linecap="round"/></svg>`
+    }
+  ];
+
+  const REGIONS = [
+    {id:'na',  label:'North America',               angle:150, r:0.62},
+    {id:'sa',  label:'South America',                angle:205, r:0.68},
+    {id:'eu',  label:'Europe',                       angle:78,  r:0.38},
+    {id:'af',  label:'Africa',                       angle:285, r:0.55},
+    {id:'me',  label:'Middle East',                  angle:50,  r:0.42},
+    {id:'sas', label:'South Asia',                   angle:22,  r:0.58},
+    {id:'ea',  label:'East Asia',                    angle:-5,  r:0.66},
+    {id:'sea', label:'Southeast Asia & Oceania',     angle:-35, r:0.72},
+    {id:'ru',  label:'Russia & North Asia',          angle:62,  r:0.78},
+    {id:'anon',label:'Prefer not to say',            angle:null,r:null}
+  ];
+
+  const STALE_MS = 90 * 1000;
+  const HEARTBEAT_MS = 20 * 1000;
+  const POLL_MS = 6000;
+
+  /* ---------------- SUPABASE CONFIG ---------------- */
+  // 1. Create a free project at https://supabase.com
+  // 2. Paste your Project URL and anon public key below (Project Settings -> API)
+  // 3. Run the SQL setup script from the instructions to create the two tables + function
+  const SUPABASE_URL = 'https://thtbjrqhmjqfhqehqibf.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_Pd4EHcJPxrKQIJVzmvdF0w_-YUGVJQI';
+
+  const supabase = (window.supabase && SUPABASE_URL.startsWith('http'))
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+  /* ---------------- DATA LAYER (Supabase-backed) ---------------- */
+
+  async function getActiveSessions(){
+    if(!supabase) return [];
+    const cutoff = Date.now() - STALE_MS;
+    try{
+      // best-effort cleanup of stale rows; ignore failures, doesn't block reading
+      supabase.from('active_sessions').delete().lt('ts', cutoff).then(()=>{}).catch(()=>{});
+      const { data, error } = await supabase.from('active_sessions').select('*').gt('ts', cutoff);
+      if(error){ console.error('getActiveSessions failed', error); return []; }
+      return (data || []).map(r => ({ id: r.id, topic: r.topic, region: r.region, ts: Number(r.ts) }));
+    }catch(e){ console.error('getActiveSessions failed', e); return []; }
+  }
+
+  async function upsertSession(id, topic, region){
+    if(!supabase) return;
+    try{ await supabase.from('active_sessions').upsert({ id, topic, region, ts: Date.now() }); }
+    catch(e){ console.error('upsertSession failed', e); }
+  }
+
+  async function deleteSession(id){
+    if(!supabase) return;
+    try{ await supabase.from('active_sessions').delete().eq('id', id); }
+    catch(e){ console.error('deleteSession failed', e); }
+  }
+
+  async function incrementAllTime(topicId){
+    if(!supabase) return;
+    try{ await supabase.rpc('increment_alltime', { topic_id: topicId }); }
+    catch(e){ console.error('incrementAllTime failed', e); }
+  }
+
+  async function getAllTimeTotals(){
+    if(!supabase) return {};
+    try{
+      const { data, error } = await supabase.from('alltime_totals').select('*');
+      if(error){ console.error('getAllTimeTotals failed', error); return {}; }
+      const totals = {};
+      (data || []).forEach(r => totals[r.topic] = r.count);
+      return totals;
+    }catch(e){ console.error('getAllTimeTotals failed', e); return {}; }
+  }
+
+  /* ---------------- SMALL UTILS ---------------- */
+
+  function uid(){ return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+
+  // deterministic small jitter from a string, in range [-1, 1]
+  function hashJitter(str, salt){
+    let h = 0;
+    const s = str + salt;
+    for(let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) | 0; }
+    return ((h % 1000) / 1000);
+  }
+
+  function fmtTime(sec){
+    const m = Math.floor(sec/60).toString().padStart(2,'0');
+    const s = Math.floor(sec%60).toString().padStart(2,'0');
+    return m+':'+s;
+  }
+
+  /* ---------------- GLOBE RENDERING ---------------- */
+
+  function globeStaticSVG(size){
+    // grid: outer circle + a few latitude ellipses + longitude arcs
+    const c = size/2, r = size*0.42;
+    let s = `<circle class="globe-outline" cx="${c}" cy="${c}" r="${r}"></circle>`;
+    // latitude lines
+    [0.35, 0.65].forEach(f=>{
+      s += `<ellipse class="globe-grid" cx="${c}" cy="${c}" rx="${r}" ry="${r*f*0.55}"></ellipse>`;
+    });
+    // longitude arcs (as narrow ellipses)
+    [0.3, 0.65, 1].forEach(f=>{
+      s += `<ellipse class="globe-grid" cx="${c}" cy="${c}" rx="${r*f}" ry="${r}"></ellipse>`;
+    });
+    return s;
+  }
+
+  function regionPoint(region, size, jitterSeed){
+    const c = size/2, R = size*0.42;
+    if(region.angle === null){
+      // "prefer not to say" -> place near center, gentle jitter
+      const jr = 0.15 + hashJitter(jitterSeed,'r')*0.15;
+      const ja = hashJitter(jitterSeed,'a') * 360;
+      const rad = ja * Math.PI/180;
+      return { x: c + R*jr*Math.cos(rad), y: c - R*jr*Math.sin(rad) };
+    }
+    const jitterA = (hashJitter(jitterSeed,'a') - 0.5) * 22; // +-11deg
+    const jitterR = (hashJitter(jitterSeed,'r') - 0.5) * 0.18;
+    const rad = (region.angle + jitterA) * Math.PI/180;
+    const rr = Math.min(0.92, Math.max(0.1, region.r + jitterR));
+    return { x: c + R*rr*Math.cos(rad), y: c - R*rr*Math.sin(rad) };
+  }
+
+  function renderGlobe(svgEl, sessions, opts){
+    opts = opts || {};
+    const size = opts.size || 300;
+    svgEl.setAttribute('viewBox', `0 0 ${size} ${size}`);
+    let html = globeStaticSVG(size);
+
+    sessions.forEach(sess=>{
+      if(opts.topicId && sess.topic !== opts.topicId) return;
+      const region = REGIONS.find(r=>r.id===sess.region) || REGIONS[REGIONS.length-1];
+      const pt = regionPoint(region, size, sess.id);
+      const color = opts.colorForTopic ? opts.colorForTopic(sess.topic) : (opts.color || '#e8b75d');
+      const haloR = size*0.045, coreR = size*0.02;
+      const delay = (hashJitter(sess.id,'d') * 3).toFixed(2);
+      html += `<circle class="dot-halo" cx="${pt.x}" cy="${pt.y}" r="${haloR}" fill="${color}" style="animation-delay:-${delay}s"></circle>`;
+      html += `<circle class="dot-core" cx="${pt.x}" cy="${pt.y}" r="${coreR}" fill="${color}" style="animation-delay:-${delay}s"></circle>`;
+    });
+
+    svgEl.innerHTML = html;
+  }
+
+  /* ---------------- BUILD TOPIC CARDS ---------------- */
+
+  const grid = document.getElementById('topics-grid');
+  const miniGlobes = {};
+
+  TOPICS.forEach(topic=>{
+    const card = document.createElement('button');
+    card.className = 'topic-card';
+    card.style.setProperty('--tc-color', topic.colorHex);
+    card.setAttribute('aria-label', 'Begin: ' + topic.name);
+    card.innerHTML = `
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+        <div class="topic-glyph">${topic.glyph}</div>
+        <svg class="globe mini-globe" data-topic="${topic.id}" viewBox="0 0 100 100"></svg>
+      </div>
+      <div>
+        <div class="topic-name">${topic.name}</div>
+        <div class="topic-desc">${topic.desc}</div>
+      </div>
+      <div class="topic-footer">
+        <div class="topic-count"><span class="n" data-count="${topic.id}">0</span> now</div>
+        <div class="topic-cta">Begin
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', ()=> openSetup(topic));
+    grid.appendChild(card);
+    miniGlobes[topic.id] = card.querySelector('.mini-globe');
+  });
+
+  const heroGlobe = document.getElementById('hero-globe');
+  const heroCountEl = document.getElementById('hero-count');
+  const allTimeEl = document.getElementById('all-time-count');
+
+  /* ---------------- REGION SELECT OPTIONS ---------------- */
+
+  const regionSelect = document.getElementById('region-select');
+  REGIONS.forEach(r=>{
+    const opt = document.createElement('option');
+    opt.value = r.id;
+    opt.textContent = r.label;
+    regionSelect.appendChild(opt);
+  });
+
+  /* ---------------- OVERLAY / SESSION STATE ---------------- */
+
+  const overlay = document.getElementById('overlay');
+  const panel = document.getElementById('panel');
+  const setupView = document.getElementById('session-setup');
+  const sessionView = document.getElementById('session-view');
+  const setupGlyph = document.getElementById('setup-glyph');
+  const setupTitle = document.getElementById('setup-title');
+  const setupDesc = document.getElementById('setup-desc');
+  const beginBtn = document.getElementById('begin-btn');
+  const leaveBtn = document.getElementById('leave-btn');
+  const panelClose = document.getElementById('panel-close');
+  const sessionGlobe = document.getElementById('session-globe');
+  const sessionTimerEl = document.getElementById('session-timer');
+  const sessionTopicCountEl = document.getElementById('session-topic-count');
+
+  let currentTopic = null;
+  let mySessionId = null;
+  let heartbeatTimer = null;
+  let sessionClockTimer = null;
+  let sessionStart = null;
+
+  function openSetup(topic){
+    currentTopic = topic;
+    panel.style.setProperty('--tc-color', topic.colorHex);
+    setupGlyph.innerHTML = topic.glyph;
+    setupTitle.textContent = topic.name;
+    setupDesc.textContent = topic.desc;
+    regionSelect.value = '';
+    beginBtn.disabled = false;
+    setupView.classList.remove('hidden');
+    sessionView.classList.remove('active');
+    overlay.classList.add('open');
+  }
+
+  function closeOverlay(){
+    overlay.classList.remove('open');
+    if(mySessionId){ leaveSession(); }
+  }
+
+  panelClose.addEventListener('click', closeOverlay);
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeOverlay(); });
+
+  beginBtn.addEventListener('click', async ()=>{
+    if(!regionSelect.value) { regionSelect.focus(); return; }
+    await beginSession(currentTopic, regionSelect.value);
+  });
+
+  leaveBtn.addEventListener('click', ()=>{
+    leaveSession();
+    overlay.classList.remove('open');
+  });
+
+  async function beginSession(topic, regionId){
+    mySessionId = uid();
+    await upsertSession(mySessionId, topic.id, regionId);
+    await incrementAllTime(topic.id);
+
+    setupView.classList.add('hidden');
+    sessionView.classList.add('active');
+    sessionStart = Date.now();
+
+    const initialSessions = await getActiveSessions();
+    renderGlobe(sessionGlobe, initialSessions, { size:200, topicId: topic.id, color: topic.colorHex });
+
+    heartbeatTimer = setInterval(()=>{
+      upsertSession(mySessionId, topic.id, regionId);
+    }, HEARTBEAT_MS);
+
+    sessionClockTimer = setInterval(()=>{
+      const sec = (Date.now() - sessionStart)/1000;
+      sessionTimerEl.textContent = fmtTime(sec);
+    }, 1000);
+  }
+
+  async function leaveSession(){
+    if(heartbeatTimer) clearInterval(heartbeatTimer);
+    if(sessionClockTimer) clearInterval(sessionClockTimer);
+    heartbeatTimer = sessionClockTimer = null;
+
+    if(mySessionId){
+      await deleteSession(mySessionId);
+    }
+    mySessionId = null;
+    sessionView.classList.remove('active');
+    sessionTimerEl.textContent = '00:00';
+  }
+
+  window.addEventListener('beforeunload', ()=>{
+    // best-effort; storage may not persist reliably during unload
+    if(mySessionId){ leaveSession(); }
+  });
+
+  /* ---------------- LIVE POLLING / RENDER ---------------- */
+
+  function colorForTopic(topicId){
+    const t = TOPICS.find(t=>t.id===topicId);
+    return t ? t.colorHex : '#e8b75d';
+  }
+
+  async function refresh(){
+    const sessions = await getActiveSessions();
+
+    // hero
+    renderGlobe(heroGlobe, sessions, { size:300, colorForTopic });
+    heroCountEl.textContent = sessions.length;
+
+    // per topic
+    TOPICS.forEach(topic=>{
+      const mine = sessions.filter(s=>s.topic===topic.id);
+      const countEl = document.querySelector(`[data-count="${topic.id}"]`);
+      if(countEl) countEl.textContent = mine.length;
+      const mg = miniGlobes[topic.id];
+      if(mg) renderGlobe(mg, sessions, { size:100, topicId: topic.id, color: topic.colorHex });
+
+      if(currentTopic && currentTopic.id === topic.id && sessionView.classList.contains('active')){
+        sessionTopicCountEl.textContent = mine.length;
+        renderGlobe(sessionGlobe, sessions, { size:200, topicId: topic.id, color: topic.colorHex });
+      }
+    });
+
+    const totals = await getAllTimeTotals();
+    const sum = Object.values(totals).reduce((a,b)=>a+b, 0);
+    allTimeEl.textContent = sum.toLocaleString();
+  }
+
+  refresh();
+  setInterval(refresh, POLL_MS);
+
+  const footerYearEl = document.getElementById('footer-year');
+  if(footerYearEl) footerYearEl.textContent = new Date().getFullYear();
+
+})();
+</script>
+
+</body>
+</html>
