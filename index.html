@@ -35,13 +35,20 @@
 
   *{ box-sizing: border-box; }
 
-  html,body{
+  html{
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    height: 100%;
+  }
+
+  body{
     margin:0; padding:0;
     background: radial-gradient(ellipse 120% 80% at 50% -10%, #162040 0%, var(--bg-deep) 55%);
     color: var(--text-main);
     font-family: 'Work Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
-    min-height:100vh;
+    height: 100%;
+    overflow-x: hidden;
   }
 
   ::selection{ background: rgba(232,183,93,0.3); }
@@ -54,7 +61,7 @@
 
   .eyebrow{
     font-family:'Space Mono', monospace;
-    font-size: 12px;
+    font-size: 13px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -67,15 +74,28 @@
   }
 
   .container{
-    max-width: 1080px;
+    max-width: 1120px;
     margin: 0 auto;
     padding: 0 28px;
+    height: 100%;
   }
 
-  /* ---------- HERO ---------- */
+  /* ---------- SCREEN SECTIONS ---------- */
+  .screen-section {
+    min-height: 100vh;
+    height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 24px 0;
+  }
+
+  /* ---------- HERO (PART 1) ---------- */
 
   header.hero{
-    padding: 72px 0 56px;
     text-align:center;
     position: relative;
   }
@@ -83,109 +103,67 @@
   .brand-row{
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    justify-content:center; /* Centered Logo */
     gap:16px;
-    margin-bottom: 44px;
+    margin-bottom: 16px;
   }
   .brand{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:12px;
   }
   .brand-mark{
-    width:8px; height:8px; border-radius:50%;
+    width:10px; height:10px; border-radius:50%;
     background: var(--gold);
-    box-shadow: 0 0 12px 2px rgba(232,183,93,0.7);
+    box-shadow: 0 0 14px 3px rgba(232,183,93,0.75);
   }
   .brand-name{
-    font-family:'Space Mono', monospace;
-    font-size:12px;
-    letter-spacing:0.18em;
-    text-transform:uppercase;
-    color: var(--text-muted);
-  }
-
-  .site-nav{
-    display:flex;
-    align-items:center;
-    gap: 10px;
-  }
-  .site-nav a{
-    font-family: 'Work Sans', sans-serif;
-    font-size: 12.5px;
-    text-decoration:none;
-    color: var(--text-muted);
-    padding: 7px 14px;
-    border-radius: 100px;
-    border: 1px solid var(--hairline-strong);
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    white-space: nowrap;
-  }
-  .site-nav a:hover{
-    color: var(--text-main);
-    border-color: var(--text-muted);
-  }
-  .site-nav a.donate-link{
-    color: #10141f;
-    background: var(--gold);
-    border-color: var(--gold);
-    font-weight: 600;
-  }
-  .site-nav a.donate-link:hover{
-    filter: brightness(1.08);
-  }
-
-  @media (max-width: 480px){
-    .brand-row{ flex-direction: column; gap: 14px; }
-    .site-nav a{ font-size: 12px; padding: 6px 12px; }
-  }
-
-  h1.headline{
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 500;
-    line-height: 1.15;
-    max-width: 720px;
-    margin: 0 auto 18px;
-    font-style: italic;
-    font-optical-sizing: auto;
-  }
-  h1.headline em{
+    font-family: 'Fraunces', serif;
     font-style: normal;
-    color: var(--gold);
+    font-weight: 600;
+    font-size: clamp(24px, 3.2vw, 32px); /* Larger Brand Name */
+    letter-spacing: 0.01em;
+    color: var(--text-main);
   }
 
-  .subhead{
-    color: var(--text-muted);
-    font-size: 16px;
-    max-width: 480px;
-    margin: 0 auto 48px;
-    line-height:1.6;
+  .hero-lines{
+    max-width: 620px;
+    margin: 12px auto 18px;
   }
+  .hero-lines p{
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(15px, 1.6vw, 17.5px); /* Larger text */
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin: 0 0 8px;
+  }
+  .hero-lines p:last-child{ margin-bottom: 0; }
 
   .hero-globe-wrap{
     position: relative;
-    width: min(340px, 78vw);
+    width: min(220px, 26vh, 52vw); /* Larger Globe Visual */
     aspect-ratio: 1;
-    margin: 0 auto 28px;
+    margin: 0 auto 14px;
   }
 
   .live-count{
-    margin-top: 8px;
+    margin-top: 6px;
   }
   .live-count .number{
     font-family:'Space Mono', monospace;
-    font-size: 40px;
+    font-size: 32px; /* Larger Live Counter */
     font-weight:700;
     color: var(--text-main);
     letter-spacing: -0.02em;
   }
   .live-count .label{
     color: var(--text-muted);
-    font-size:14px;
+    font-size:13.5px;
     letter-spacing:0.02em;
   }
 
-  /* ---------- GLOBE (shared svg styling) ---------- */
+  /* ---------- GLOBE SVG ---------- */
 
   svg.globe{ width:100%; height:100%; overflow:visible; }
   .globe-grid{
@@ -206,15 +184,17 @@
     50% { transform: scale(1.15); }
   }
 
-  /* ---------- TOPICS GRID ---------- */
+  /* ---------- INTENTIONS (PART 2) ---------- */
 
-  main{ padding-bottom: 90px; }
+  .intentions-section{
+    justify-content: center;
+  }
 
   .section-label{
     display:flex;
     align-items:baseline;
     gap: 14px;
-    margin: 8px 0 24px;
+    margin: 0 0 20px;
   }
   .section-label .rule{
     flex:1;
@@ -224,25 +204,33 @@
 
   .topics-grid{
     display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 980px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 860px){
+    .topics-grid{ grid-template-columns: repeat(4, 1fr); }
   }
 
   .topic-card{
     background: linear-gradient(165deg, var(--bg-panel) 0%, var(--bg-panel-2) 100%);
     border: 1px solid var(--hairline);
-    border-radius: 18px;
-    padding: 26px 24px 22px;
+    border-radius: 20px;
+    padding: 26px 22px 20px;
     text-align: left;
     cursor: pointer;
     color: inherit;
     font: inherit;
     display:flex;
     flex-direction: column;
-    gap: 14px;
+    justify-content: space-between;
     transition: border-color 0.25s ease, transform 0.25s ease;
     position: relative;
     overflow:hidden;
+    min-height: 310px; /* Bigger Card height */
   }
   .topic-card:hover, .topic-card:focus-visible{
     border-color: var(--tc-color, var(--hairline-strong));
@@ -252,33 +240,46 @@
     content:"";
     position:absolute;
     inset:auto -30% -60% auto;
-    width:180px; height:180px;
+    width:200px; height:200px;
     background: radial-gradient(circle, var(--tc-color, transparent) 0%, transparent 70%);
     opacity: 0.12;
     pointer-events:none;
   }
 
+  /* Centered visual header for intention boxes */
+  .topic-header-visuals {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centered Globe & Glyph */
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
   .topic-glyph{
-    width:44px; height:44px;
+    width:46px; height:46px;
     color: var(--tc-color);
   }
 
   .topic-name{
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 500;
+    line-height: 1.35;
+    margin-bottom: 1em; /* 1 line space under titles */
+    min-height: 2.7em; /* Reserves identical height across all titles to align body text */
+    display: flex;
+    align-items: flex-start;
   }
   .topic-desc{
-    font-size: 13.5px;
+    font-size: 14px;
     color: var(--text-muted);
-    line-height:1.5;
-    flex:1;
+    line-height: 1.5;
   }
 
   .topic-footer{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    margin-top:4px;
+    margin-top: auto; /* Bottom align #now begin lines */
     padding-top: 14px;
     border-top: 1px solid var(--hairline);
   }
@@ -295,35 +296,94 @@
   }
 
   .topic-cta{
+    font-family: 'Space Mono', monospace;
     font-size:13px;
-    letter-spacing:0.04em;
+    letter-spacing:0.02em;
     color: var(--tc-color);
     display:flex;
     align-items:center;
     gap:6px;
   }
-  .topic-cta svg{ width:12px; height:12px; }
+  .topic-cta svg{ width:13px; height:13px; }
 
   .mini-globe{
-    width: 54px; height:54px;
-    opacity:0.9;
+    width: 56px; height:56px;
+    opacity:0.95;
   }
 
   /* ---------- FOOTNOTE ---------- */
 
   .note{
-    margin-top: 40px;
+    margin-top: 28px;
     text-align:center;
-    font-size: 12.5px;
+    font-size: 13px;
     color: var(--text-faint);
-    line-height:1.6;
-    max-width: 480px;
+    line-height:1.55;
+    max-width: 580px;
     margin-left:auto;
     margin-right:auto;
   }
   .note .all-time{
     font-family:'Space Mono', monospace;
     color: var(--text-muted);
+  }
+
+  /* ---------- ABOUT / SEO SECTION (PART 3) ---------- */
+
+  .about-section{
+    justify-content: space-between;
+  }
+
+  .about-content-wrap{
+    margin: auto 0;
+  }
+
+  .about-section h2{
+    font-size: clamp(24px, 3.4vw, 34px);
+    font-style: italic;
+    margin: 0 auto 18px;
+    max-width: 640px;
+    text-align: center;
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 28px;
+    margin-top: 32px;
+  }
+  .about-grid h3{
+    font-size: 16.5px;
+    font-style: normal;
+    color: var(--gold);
+    margin-bottom: 10px;
+    letter-spacing: 0.01em;
+  }
+  .about-grid p, .about-section > p, .about-content-wrap > p{
+    color: var(--text-muted);
+    font-size: 14.5px;
+    line-height: 1.65;
+    max-width: 680px;
+  }
+  .about-content-wrap > p{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ---------- FOOTER ---------- */
+
+  footer.site-footer{
+    padding: 24px 0 0;
+    border-top: 1px solid var(--hairline);
+    display:flex;
+    flex-wrap: wrap;
+    align-items:center;
+    justify-content:center;
+    gap: 16px;
+  }
+  footer.site-footer .copyright{
+    color: var(--text-faint);
+    font-size: 13px;
   }
 
   /* ---------- OVERLAY / SESSION ---------- */
@@ -419,7 +479,7 @@
   .begin-btn:hover{ filter: brightness(1.08); }
   .begin-btn:disabled{ opacity:0.5; cursor:not-allowed; }
 
-  /* ---------- SESSION (active) VIEW ---------- */
+  /* ---------- SESSION (ACTIVE) VIEW ---------- */
 
   .session-view{
     display:none;
@@ -501,90 +561,33 @@
     .topic-card{ transition:none; }
   }
 
-  @media (max-width: 560px){
-    header.hero{ padding: 52px 0 40px; }
+  @media (max-width: 600px){
+    html { scroll-snap-type: none; }
+    .screen-section { height: auto; min-height: 100vh; padding: 32px 0; }
+    .brand-row{ flex-direction: column; gap: 14px; }
     .topics-grid{ grid-template-columns: 1fr; }
-  }
-
-  /* ---------- ABOUT / SEO SECTION ---------- */
-
-  .about-section{
-    margin-top: 72px;
-    padding-top: 56px;
-    border-top: 1px solid var(--hairline);
-  }
-  .about-section h2{
-    font-size: clamp(24px, 3.4vw, 32px);
-    font-style: italic;
-    margin-bottom: 20px;
-    max-width: 560px;
-  }
-  .about-grid{
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 32px;
-    margin-top: 32px;
-  }
-  .about-grid h3{
-    font-size: 15px;
-    font-style: normal;
-    color: var(--gold);
-    margin-bottom: 8px;
-    letter-spacing: 0.01em;
-  }
-  .about-grid p, .about-section > p{
-    color: var(--text-muted);
-    font-size: 14.5px;
-    line-height: 1.7;
-    max-width: 620px;
-  }
-
-  /* ---------- FOOTER ---------- */
-
-  footer.site-footer{
-    margin-top: 64px;
-    padding: 32px 0 8px;
-    border-top: 1px solid var(--hairline);
-    display:flex;
-    flex-wrap: wrap;
-    align-items:center;
-    justify-content:space-between;
-    gap: 16px;
-  }
-  footer.site-footer .foot-links{
-    display:flex;
-    gap: 18px;
-    flex-wrap: wrap;
-  }
-  footer.site-footer a{
-    color: var(--text-muted);
-    text-decoration:none;
-    font-size: 13px;
-  }
-  footer.site-footer a:hover{ color: var(--text-main); }
-  footer.site-footer .copyright{
-    color: var(--text-faint);
-    font-size: 12.5px;
+    .topic-card{ min-height: auto; }
+    .topic-name{ min-height: auto; }
   }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <header class="hero">
+  
+  <!-- PART 1: HERO / UPPER PART -->
+  <header class="hero screen-section">
     <div class="brand-row">
       <div class="brand">
         <span class="brand-mark"></span>
         <span class="brand-name">Kindled Earth</span>
       </div>
-      <nav class="site-nav">
-        <a href="mailto:hello@kindledearth.com">Contact</a>
-        <a class="donate-link" href="https://your-donate-link-here.example.com" target="_blank" rel="noopener">Donate</a>
-      </nav>
     </div>
-
-    <h1 class="headline">A quiet <em>moment</em>, held<br>by everyone doing it with you.</h1>
-    <p class="subhead">Choose an intention below. Wherever you are, you'll join others doing the same thing, right now, somewhere on the map.</p>
+    <div class="hero-lines">
+      <p>Kindling: tending our sparks, together, into warmth, into hope, into flame.</p>
+      <p>Holding the Earth and its beings gently, together, one breath at a time.</p>
+      <p>Choose your intention below. You're no longer sitting alone. You are joining a space others are holding too, aware and present, right now.</p>
+    </div>
 
     <div class="hero-globe-wrap">
       <svg class="globe" id="hero-globe" viewBox="0 0 300 300"></svg>
@@ -597,63 +600,66 @@
   </header>
 
   <main>
-    <div class="section-label">
-      <span class="eyebrow">Choose an intention</span>
-      <span class="rule"></span>
-    </div>
-
-    <div class="topics-grid" id="topics-grid"></div>
-
-    <p class="note">
-      Live counts reflect people currently in a session (not a lifetime total). Regions are self-selected and shown only as an approximate glow on the globe — never an exact location.
-      <br>
-      <span class="all-time" id="all-time-count">— </span> sessions have been held here since this page opened its doors.
-    </p>
-
-    <section class="about-section" id="about">
-      <h2>A free, live space for global meditation</h2>
-      <p>
-        Kindled Earth is a place to meditate and send love around the world alongside other people, in real time. There's no
-        account to create and nothing to download — pick an intention, choose the region you're joining from, and you're in
-        a session with everyone else doing the same thing at that moment, anywhere on Earth. The live map fills in as more
-        people join, so a solo sit turns into something visibly shared.
-      </p>
-
-      <div class="about-grid">
-        <div>
-          <h3>Why a live world map</h3>
-          <p>
-            Most meditation apps are private by design — just you and a timer. Kindled Earth adds a second layer: a
-            simple, honest view of who else is meditating with you right now, and roughly where in the world they are.
-            It's a small way to feel less alone in a practice that's usually solitary.
-          </p>
-        </div>
-        <div>
-          <h3>Send love, lift the world, find stillness</h3>
-          <p>
-            Each intention on this page — lifting the planet's energy, sending love to the world, holding space for peace,
-            practicing gratitude, or sending healing to people who are struggling — is its own live room with its own
-            counter and its own map, so you can join whichever one matches how you want to spend the next few minutes.
-          </p>
-        </div>
-        <div>
-          <h3>Free, anonymous, always open</h3>
-          <p>
-            Kindled Earth doesn't ask for your name, your exact location, or a login. It's free to use, runs entirely in
-            your browser, and is open any time — there's no scheduled start time to wait for. Meditation and sending love
-            to the world are both practices you can begin the moment you feel like it.
-          </p>
-        </div>
+    <!-- PART 2: INTENTIONS -->
+    <section class="intentions-section screen-section">
+      <div class="section-label">
+        <span class="eyebrow">Choose an intention</span>
+        <span class="rule"></span>
       </div>
+
+      <div class="topics-grid" id="topics-grid"></div>
+
+      <p class="note">
+        Live counts reflect people currently in a session (not a lifetime total). Regions are self-selected and shown only as an approximate glow on the globe — never an exact location.
+        <br>
+        <span class="all-time" id="all-time-count">— </span> sessions have been held here since this page opened its doors.
+      </p>
     </section>
 
-    <footer class="site-footer">
-      <div class="copyright">© <span id="footer-year"></span> Kindled Earth</div>
-      <div class="foot-links">
-        <a href="mailto:hello@kindledearth.com">Contact</a>
-        <a href="https://your-donate-link-here.example.com" target="_blank" rel="noopener">Support this project</a>
+    <!-- PART 3: ABOUT & FOOTER -->
+    <section class="about-section screen-section" id="about">
+      <div class="about-content-wrap">
+        <h2>A gathered space for presence, love, and awareness</h2>
+        <p>
+          Kindled Earth is a gathered space — held together, moment to moment, by whoever shows up. There's no account to
+          create and nothing to download. Choose an intention, choose the region you're joining from, and you become part
+          of a space other people are holding too, awake and present, right where they are. The live map fills in as more
+          people arrive, so a private moment becomes something visibly shared.
+        </p>
+
+        <div class="about-grid">
+          <div>
+            <h3>Why a live world map</h3>
+            <p>
+              Most meditation happens alone, in private. Kindled Earth adds a second layer of awareness — a simple,
+              honest window into who else is holding this same space with you right now, and roughly where in the world
+              they are. It's a quiet way to feel gathered, rather than alone, in a practice that's usually solitary.
+            </p>
+          </div>
+          <div>
+            <h3>Send love, lift the world, find stillness</h3>
+            <p>
+              Each intention on this page — lifting the planet's energy, sending love to the world, holding space for
+              peace, practicing gratitude, or sending healing to people who are struggling — opens its own gathered room,
+              with its own live counter and map, so you can join whichever kind of space-holding matches how you want to
+              spend the next few minutes.
+            </p>
+          </div>
+          <div>
+            <h3>Free, anonymous, always open</h3>
+            <p>
+              Kindled Earth doesn't ask for your name, your exact location, or a login. It's free, it runs in your
+              browser, and the space is always open — there's no scheduled start time to wait for. Gathering, holding
+              space, and sending love to the world are all practices you can begin the moment you feel called to.
+            </p>
+          </div>
+        </div>
       </div>
-    </footer>
+
+      <footer class="site-footer">
+        <div class="copyright">© <span id="footer-year"></span> Kindled Earth</div>
+      </footer>
+    </section>
   </main>
 </div>
 
@@ -704,24 +710,14 @@
 
   const TOPICS = [
     {
-      id:'earth', name:'Lift the Earth', color:'var(--violet)', colorHex:'#9c8fe0',
-      desc:"A collective meditation to raise the energy of the planet, one steady breath at a time.",
+      id:'earth-love', name:'Lift & Love the Earth', color:'var(--rose)', colorHex:'#d98fb8',
+      desc:"A collective meditation to raise the planet's energy and send it love — two forms of the same act, held as one.",
       phrases:[
         "Feel the ground beneath you, solid and patient.",
-        "Let your energy rise slowly, like light through water.",
+        "Let warmth move outward without needing anything back.",
         "You are one steady point in a much larger field."
       ],
-      glyph: `<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M30 6 C 42 6 50 16 50 28 C 50 40 40 46 30 46" stroke-linecap="round"/><path d="M30 14 C 38 14 44 20 44 28 C 44 36 37 40 30 40" stroke-linecap="round" opacity="0.6"/><circle cx="30" cy="46" r="2.4" fill="currentColor" stroke="none"/></svg>`
-    },
-    {
-      id:'love', name:'Send Love to the Planet', color:'var(--rose)', colorHex:'#e0879c',
-      desc:"Direct a quiet wave of warmth outward, toward the whole Earth and everyone on it.",
-      phrases:[
-        "Picture the whole Earth, small and bright, held gently.",
-        "Let warmth move outward without needing anything back.",
-        "Love travels further than you think it can."
-      ],
-      glyph: `<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M30 44 C 12 32 12 16 24 14 C 28 13.2 30 17 30 20 C 30 17 32 13.2 36 14 C 48 16 48 32 30 44 Z" stroke-linejoin="round"/></svg>`
+      glyph: `<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M30 40 C 12 28 12 12 24 10 C 28 9.2 30 13 30 16 C 30 13 32 9.2 36 10 C 48 12 48 28 30 40 Z" stroke-linejoin="round"/><path d="M20 48 C 24 51 36 51 40 48" stroke-linecap="round" opacity="0.6"/></svg>`
     },
     {
       id:'peace', name:'Peace Among People', color:'var(--teal)', colorHex:'#5fbfb3',
@@ -773,9 +769,6 @@
   const POLL_MS = 6000;
 
   /* ---------------- SUPABASE CONFIG ---------------- */
-  // 1. Create a free project at https://supabase.com
-  // 2. Paste your Project URL and anon public key below (Project Settings -> API)
-  // 3. Run the SQL setup script from the instructions to create the two tables + function
   const SUPABASE_URL = 'https://thtbjrqhmjqfhqehqibf.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_Pd4EHcJPxrKQIJVzmvdF0w_-YUGVJQI';
 
@@ -783,13 +776,12 @@
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     : null;
 
-  /* ---------------- DATA LAYER (Supabase-backed) ---------------- */
+  /* ---------------- DATA LAYER ---------------- */
 
   async function getActiveSessions(){
     if(!supabase) return [];
     const cutoff = Date.now() - STALE_MS;
     try{
-      // best-effort cleanup of stale rows; ignore failures, doesn't block reading
       supabase.from('active_sessions').delete().lt('ts', cutoff).then(()=>{}).catch(()=>{});
       const { data, error } = await supabase.from('active_sessions').select('*').gt('ts', cutoff);
       if(error){ console.error('getActiveSessions failed', error); return []; }
@@ -830,7 +822,6 @@
 
   function uid(){ return Math.random().toString(36).slice(2) + Date.now().toString(36); }
 
-  // deterministic small jitter from a string, in range [-1, 1]
   function hashJitter(str, salt){
     let h = 0;
     const s = str + salt;
@@ -847,14 +838,11 @@
   /* ---------------- GLOBE RENDERING ---------------- */
 
   function globeStaticSVG(size){
-    // grid: outer circle + a few latitude ellipses + longitude arcs
     const c = size/2, r = size*0.42;
     let s = `<circle class="globe-outline" cx="${c}" cy="${c}" r="${r}"></circle>`;
-    // latitude lines
     [0.35, 0.65].forEach(f=>{
       s += `<ellipse class="globe-grid" cx="${c}" cy="${c}" rx="${r}" ry="${r*f*0.55}"></ellipse>`;
     });
-    // longitude arcs (as narrow ellipses)
     [0.3, 0.65, 1].forEach(f=>{
       s += `<ellipse class="globe-grid" cx="${c}" cy="${c}" rx="${r*f}" ry="${r}"></ellipse>`;
     });
@@ -864,13 +852,12 @@
   function regionPoint(region, size, jitterSeed){
     const c = size/2, R = size*0.42;
     if(region.angle === null){
-      // "prefer not to say" -> place near center, gentle jitter
       const jr = 0.15 + hashJitter(jitterSeed,'r')*0.15;
       const ja = hashJitter(jitterSeed,'a') * 360;
       const rad = ja * Math.PI/180;
       return { x: c + R*jr*Math.cos(rad), y: c - R*jr*Math.sin(rad) };
     }
-    const jitterA = (hashJitter(jitterSeed,'a') - 0.5) * 22; // +-11deg
+    const jitterA = (hashJitter(jitterSeed,'a') - 0.5) * 22;
     const jitterR = (hashJitter(jitterSeed,'r') - 0.5) * 0.18;
     const rad = (region.angle + jitterA) * Math.PI/180;
     const rr = Math.min(0.92, Math.max(0.1, region.r + jitterR));
@@ -908,17 +895,19 @@
     card.style.setProperty('--tc-color', topic.colorHex);
     card.setAttribute('aria-label', 'Begin: ' + topic.name);
     card.innerHTML = `
-      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
-        <div class="topic-glyph">${topic.glyph}</div>
-        <svg class="globe mini-globe" data-topic="${topic.id}" viewBox="0 0 100 100"></svg>
-      </div>
       <div>
-        <div class="topic-name">${topic.name}</div>
-        <div class="topic-desc">${topic.desc}</div>
+        <div class="topic-header-visuals">
+          <div class="topic-glyph">${topic.glyph}</div>
+          <svg class="globe mini-globe" data-topic="${topic.id}" viewBox="0 0 100 100"></svg>
+        </div>
+        <div>
+          <div class="topic-name">${topic.name}</div>
+          <div class="topic-desc">${topic.desc}</div>
+        </div>
       </div>
       <div class="topic-footer">
         <div class="topic-count"><span class="n" data-count="${topic.id}">0</span> now</div>
-        <div class="topic-cta">Begin
+        <div class="topic-cta">#now begin
           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
       </div>
@@ -1031,7 +1020,6 @@
   }
 
   window.addEventListener('beforeunload', ()=>{
-    // best-effort; storage may not persist reliably during unload
     if(mySessionId){ leaveSession(); }
   });
 
@@ -1045,11 +1033,9 @@
   async function refresh(){
     const sessions = await getActiveSessions();
 
-    // hero
     renderGlobe(heroGlobe, sessions, { size:300, colorForTopic });
     heroCountEl.textContent = sessions.length;
 
-    // per topic
     TOPICS.forEach(topic=>{
       const mine = sessions.filter(s=>s.topic===topic.id);
       const countEl = document.querySelector(`[data-count="${topic.id}"]`);
