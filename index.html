@@ -864,24 +864,66 @@
     return { x: c + R*rr*Math.cos(rad), y: c - R*rr*Math.sin(rad) };
   }
 
-  function renderGlobe(svgEl, sessions, opts){
+ function renderGlobe(svgEl, sessions, opts){
     opts = opts || {};
     const size = opts.size || 300;
     svgEl.setAttribute('viewBox', `0 0 ${size} ${size}`);
-    let html = globeStaticSVG(size);
 
-    sessions.forEach(sess=>{
-      if(opts.topicId && sess.topic !== opts.topicId) return;
-      const region = REGIONS.find(r=>r.id===sess.region) || REGIONS[REGIONS.length-1];
-      const pt = regionPoint(region, size, sess.id);
-      const color = opts.colorForTopic ? opts.colorForTopic(sess.topic) : (opts.color || '#e8b75d');
-      const haloR = size*0.045, coreR = size*0.02;
-      const delay = (hashJitter(sess.id,'d') * 3).toFixed(2);
-      html += `<circle class="dot-halo" cx="${pt.x}" cy="${pt.y}" r="${haloR}" fill="${color}" style="animation-delay:-${delay}s"></circle>`;
-      html += `<circle class="dot-core" cx="${pt.x}" cy="${pt.y}" r="${coreR}" fill="${color}" style="animation-delay:-${delay}s"></circle>`;
+    // 1. Initialize static layers once
+    if (!svgEl.querySelector('.dots-layer')) {
+      svgEl.innerHTML = `
+        <g class="static-layer">${globeStaticSVG(size)}</g>
+        <g class="dots-layer"></g>
+      `;
+    }
+
+    const dotsLayer = svgEl.querySelector('.dots-layer');
+
+    // 2. Filter sessions for this specific globe
+    const validSessions = sessions.filter(s => !opts.topicId || s.topic === opts.topicId);
+    const currentIds = new Set(validSessions.map(s => s.id));
+
+    // 3. Remove dots for users who left
+    dotsLayer.querySelectorAll('.session-dot').forEach(dotGroup => {
+      if (!currentIds.has(dotGroup.dataset.id)) {
+        dotGroup.remove();
+      }
     });
 
-    svgEl.innerHTML = html;
+    // 4. Add new dots without resetting existing animations
+    validSessions.forEach(sess => {
+      if (!dotsLayer.querySelector(`[data-id="${sess.id}"]`)) {
+        const region = REGIONS.find(r => r.id === sess.region) || REGIONS[REGIONS.length-1];
+        const pt = regionPoint(region, size, sess.id);
+        const color = opts.colorForTopic ? opts.colorForTopic(sess.topic) : (opts.color || '#e8b75d');
+        const haloR = size * 0.045, coreR = size * 0.02;
+        const delay = (hashJitter(sess.id, 'd') * 3).toFixed(2);
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'session-dot');
+        g.setAttribute('data-id', sess.id);
+
+        const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        halo.setAttribute('class', 'dot-halo');
+        halo.setAttribute('cx', pt.x);
+        halo.setAttribute('cy', pt.y);
+        halo.setAttribute('r', haloR);
+        halo.setAttribute('fill', color);
+        halo.style.animationDelay = `-${delay}s`;
+
+        const core = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        core.setAttribute('class', 'dot-core');
+        core.setAttribute('cx', pt.x);
+        core.setAttribute('cy', pt.y);
+        core.setAttribute('r', coreR);
+        core.setAttribute('fill', color);
+        core.style.animationDelay = `-${delay}s`;
+
+        g.appendChild(halo);
+        g.appendChild(core);
+        dotsLayer.appendChild(g);
+      }
+    });
   }
 
   /* ---------------- BUILD TOPIC CARDS ---------------- */
