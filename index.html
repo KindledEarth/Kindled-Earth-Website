@@ -764,7 +764,7 @@
     {id:'anon',label:'Prefer not to say',            angle:null,r:null}
   ];
 
-  const STALE_MS = 90 * 1000;
+  const STALE_MS = 20 * 60 * 1000; // 20 minutes — forgives screen locks / backgrounded tabs
   const HEARTBEAT_MS = 20 * 1000;
   const POLL_MS = 6000;
 
