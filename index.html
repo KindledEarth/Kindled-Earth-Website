@@ -11,7 +11,16 @@
 <meta property="og:site_name" content="Kindled Earth">
 <meta property="og:title" content="Kindled Earth — a live, global meditation space">
 <meta property="og:description" content="Choose an intention. Join others meditating and sending love with you right now, from wherever they are in the world.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://kindledearth.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://kindledearth.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kindledearth.com/og-image.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0f1e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Work+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -124,6 +133,8 @@
     font-size: clamp(24px, 3.2vw, 32px); /* Larger Brand Name */
     letter-spacing: 0.01em;
     color: var(--text-main);
+    margin: 0;
+    line-height: 1;
   }
 
   .hero-lines{
@@ -506,25 +517,24 @@
     margin: 6px 0 18px;
   }
 
-  .music-suggestion{
-    display:inline-flex;
-    align-items:center;
-    gap:9px;
-    text-decoration:none;
-    background: rgba(29,185,84,0.1);
-    border: 1px solid rgba(29,185,84,0.35);
-    color: var(--text-main);
-    font-size: 13px;
-    padding: 9px 16px;
-    border-radius: 100px;
-    margin-bottom: 24px;
-    transition: background 0.2s ease, border-color 0.2s ease;
+  .music-embed-wrap{
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 22px;
   }
-  .music-suggestion:hover{
-    background: rgba(29,185,84,0.18);
-    border-color: rgba(29,185,84,0.55);
+  .music-embed{
+    border-radius: 12px;
+    display: block;
   }
-  .music-suggestion svg{ width:15px; height:15px; flex-shrink:0; }
+  .music-open-link{
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .music-open-link:hover{ color: var(--text-main); }
 
   .session-meta{
     display:flex;
@@ -559,6 +569,8 @@
   @media (prefers-reduced-motion: reduce){
     .dot-core, .dot-halo{ animation: none !important; }
     .topic-card{ transition:none; }
+    html{ scroll-snap-type: none !important; scroll-behavior: auto !important; }
+    .screen-section{ scroll-snap-align: none !important; }
   }
 
   @media (max-width: 600px){
@@ -580,7 +592,7 @@
     <div class="brand-row">
       <div class="brand">
         <span class="brand-mark"></span>
-        <span class="brand-name">Kindled Earth</span>
+        <h1 class="brand-name">Kindled Earth</h1>
       </div>
     </div>
     <div class="hero-lines">
@@ -590,10 +602,10 @@
     </div>
 
     <div class="hero-globe-wrap">
-      <svg class="globe" id="hero-globe" viewBox="0 0 300 300"></svg>
+      <svg class="globe" id="hero-globe" viewBox="0 0 300 300" aria-hidden="true"></svg>
     </div>
 
-    <div class="live-count">
+    <div class="live-count" aria-live="polite" aria-atomic="true">
       <div class="number" id="hero-count">0</div>
       <div class="label">people are in a session with you right now</div>
     </div>
@@ -607,7 +619,83 @@
         <span class="rule"></span>
       </div>
 
-      <div class="topics-grid" id="topics-grid"></div>
+      <div class="topics-grid" id="topics-grid">
+        <button class="topic-card" data-topic-id="earth-love" style="--tc-color:#d98fb8;" aria-label="Begin: Lift &amp; Love the Earth">
+          <div>
+            <div class="topic-header-visuals">
+              <div class="topic-glyph"><svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M30 40 C 12 28 12 12 24 10 C 28 9.2 30 13 30 16 C 30 13 32 9.2 36 10 C 48 12 48 28 30 40 Z" stroke-linejoin="round"/><path d="M20 48 C 24 51 36 51 40 48" stroke-linecap="round" opacity="0.6"/></svg></div>
+              <svg class="globe mini-globe" data-topic="earth-love" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            </div>
+            <div>
+              <div class="topic-name">Lift &amp; Love the Earth</div>
+              <div class="topic-desc">A collective meditation to raise the planet's energy and send it love — two forms of the same act, held as one.</div>
+            </div>
+          </div>
+          <div class="topic-footer">
+            <div class="topic-count"><span class="n" data-count="earth-love">0</span> now</div>
+            <div class="topic-cta">#now begin
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 6h8M6 2l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </button>
+
+        <button class="topic-card" data-topic-id="peace" style="--tc-color:#5fbfb3;" aria-label="Begin: Peace Among People">
+          <div>
+            <div class="topic-header-visuals">
+              <div class="topic-glyph"><svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="24" cy="30" r="14"/><circle cx="36" cy="30" r="14"/></svg></div>
+              <svg class="globe mini-globe" data-topic="peace" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            </div>
+            <div>
+              <div class="topic-name">Peace Among People</div>
+              <div class="topic-desc">Hold humanity, in all its differences, inside one shared and steady field of calm.</div>
+            </div>
+          </div>
+          <div class="topic-footer">
+            <div class="topic-count"><span class="n" data-count="peace">0</span> now</div>
+            <div class="topic-cta">#now begin
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 6h8M6 2l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </button>
+
+        <button class="topic-card" data-topic-id="gratitude" style="--tc-color:#e8b75d;" aria-label="Begin: Gratitude for Life">
+          <div>
+            <div class="topic-header-visuals">
+              <div class="topic-glyph"><svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="30" cy="30" r="9"/><g stroke-linecap="round"><path d="M30 8v7"/><path d="M30 45v7"/><path d="M8 30h7"/><path d="M45 30h7"/><path d="M14 14l5 5"/><path d="M41 41l5 5"/><path d="M46 14l-5 5"/><path d="M19 41l-5 5"/></g></svg></div>
+              <svg class="globe mini-globe" data-topic="gratitude" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            </div>
+            <div>
+              <div class="topic-name">Gratitude for Life</div>
+              <div class="topic-desc">Sit for a while with plain thankfulness for the fact of being alive at all.</div>
+            </div>
+          </div>
+          <div class="topic-footer">
+            <div class="topic-count"><span class="n" data-count="gratitude">0</span> now</div>
+            <div class="topic-cta">#now begin
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 6h8M6 2l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </button>
+
+        <button class="topic-card" data-topic-id="healing" style="--tc-color:#8fbf7f;" aria-label="Begin: Healing for All Beings">
+          <div>
+            <div class="topic-header-visuals">
+              <div class="topic-glyph"><svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M30 46 C 30 46 14 36 14 24 C 14 17 20 13 26 16 C 28 17 30 20 30 20 C 30 20 32 17 34 16 C 40 13 46 17 46 24 C 46 36 30 46 30 46 Z" opacity="0.5"/><path d="M22 30h6l3-7 4 12 3-5h6" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+              <svg class="globe mini-globe" data-topic="healing" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            </div>
+            <div>
+              <div class="topic-name">Healing for All Beings</div>
+              <div class="topic-desc">Offer a quiet intention of healing to anyone, anywhere, who is carrying something heavy.</div>
+            </div>
+          </div>
+          <div class="topic-footer">
+            <div class="topic-count"><span class="n" data-count="healing">0</span> now</div>
+            <div class="topic-cta">#now begin
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 6h8M6 2l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </button>
+      </div>
 
       <p class="note">
         Live counts reflect people currently in a session (not a lifetime total). Regions are self-selected and shown only as an approximate glow on the globe — never an exact location.
@@ -664,11 +752,11 @@
 </div>
 
 <div class="overlay" id="overlay">
-  <div class="panel" id="panel" style="--tc-color:#fff;">
+  <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="setup-title" tabindex="-1" style="--tc-color:#fff;">
     <button class="panel-close" id="panel-close" aria-label="Close">✕</button>
 
     <div class="session-setup" id="session-setup">
-      <div class="panel-glyph" id="setup-glyph"></div>
+      <div class="panel-glyph" id="setup-glyph" aria-hidden="true"></div>
       <h2 id="setup-title">Topic</h2>
       <p class="desc" id="setup-desc">Description</p>
 
@@ -681,13 +769,13 @@
 
     <div class="session-view" id="session-view">
       <div class="session-globe-wrap">
-        <svg class="globe" id="session-globe" viewBox="0 0 200 200"></svg>
+        <svg class="globe" id="session-globe" viewBox="0 0 200 200" aria-hidden="true"></svg>
       </div>
       <div class="session-thanks" id="session-thanks">Thank you for joining in.</div>
-      <a class="music-suggestion" id="music-suggestion" href="https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-        Suggested meditation music on Spotify
-      </a>
+      <div class="music-embed-wrap">
+        <iframe class="music-embed" title="Suggested meditation music on Spotify" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZqd5JICZI0u?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <a class="music-open-link" href="https://open.spotify.com/playlist/37i9dQZF1DWZqd5JICZI0u" target="_blank" rel="noopener noreferrer">Open full playlist in Spotify ↗</a>
+      </div>
       <div class="session-meta">
         <div class="item">
           <div class="v" id="session-timer">00:00</div>
@@ -926,38 +1014,21 @@
     });
   }
 
-  /* ---------------- BUILD TOPIC CARDS ---------------- */
+  /* ---------------- WIRE UP TOPIC CARDS (markup is pre-rendered in HTML for SEO/crawlability) ---------------- */
 
   const grid = document.getElementById('topics-grid');
   const miniGlobes = {};
+  const topicCards = {};
 
   TOPICS.forEach(topic=>{
-    const card = document.createElement('button');
-    card.className = 'topic-card';
+    const card = grid.querySelector(`.topic-card[data-topic-id="${topic.id}"]`);
+    if(!card) return;
     card.style.setProperty('--tc-color', topic.colorHex);
-    card.setAttribute('aria-label', 'Begin: ' + topic.name);
-    card.innerHTML = `
-      <div>
-        <div class="topic-header-visuals">
-          <div class="topic-glyph">${topic.glyph}</div>
-          <svg class="globe mini-globe" data-topic="${topic.id}" viewBox="0 0 100 100"></svg>
-        </div>
-        <div>
-          <div class="topic-name">${topic.name}</div>
-          <div class="topic-desc">${topic.desc}</div>
-        </div>
-      </div>
-      <div class="topic-footer">
-        <div class="topic-count"><span class="n" data-count="${topic.id}">0</span> now</div>
-        <div class="topic-cta">#now begin
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-      </div>
-    `;
     card.addEventListener('click', ()=> openSetup(topic));
-    grid.appendChild(card);
     miniGlobes[topic.id] = card.querySelector('.mini-globe');
+    topicCards[topic.id] = card;
   });
+
 
   const heroGlobe = document.getElementById('hero-globe');
   const heroCountEl = document.getElementById('hero-count');
@@ -994,8 +1065,15 @@
   let heartbeatTimer = null;
   let sessionClockTimer = null;
   let sessionStart = null;
+  let lastFocusedElement = null;
+
+  function getFocusable(container){
+    return Array.from(container.querySelectorAll('button, [href], select, input, textarea, iframe, [tabindex]:not([tabindex="-1"])'))
+      .filter(el => !el.disabled && el.offsetParent !== null);
+  }
 
   function openSetup(topic){
+    lastFocusedElement = document.activeElement;
     currentTopic = topic;
     panel.style.setProperty('--tc-color', topic.colorHex);
     setupGlyph.innerHTML = topic.glyph;
@@ -1006,15 +1084,33 @@
     setupView.classList.remove('hidden');
     sessionView.classList.remove('active');
     overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    panel.focus();
   }
 
   function closeOverlay(){
     overlay.classList.remove('open');
+    document.body.style.overflow = '';
     if(mySessionId){ leaveSession(); }
+    if(lastFocusedElement){ lastFocusedElement.focus(); lastFocusedElement = null; }
   }
 
   panelClose.addEventListener('click', closeOverlay);
   overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeOverlay(); });
+
+  panel.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){ closeOverlay(); return; }
+    if(e.key !== 'Tab') return;
+    const focusables = getFocusable(panel);
+    if(focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if(e.shiftKey && document.activeElement === first){
+      e.preventDefault(); last.focus();
+    } else if(!e.shiftKey && document.activeElement === last){
+      e.preventDefault(); first.focus();
+    }
+  });
 
   beginBtn.addEventListener('click', async ()=>{
     if(!regionSelect.value) { regionSelect.focus(); return; }
@@ -1084,6 +1180,11 @@
       if(countEl) countEl.textContent = mine.length;
       const mg = miniGlobes[topic.id];
       if(mg) renderGlobe(mg, sessions, { size:100, topicId: topic.id, color: topic.colorHex });
+      const card = topicCards[topic.id];
+      if(card){
+        const countLabel = mine.length === 1 ? '1 person now' : mine.length + ' people now';
+        card.setAttribute('aria-label', 'Begin: ' + topic.name + ' — ' + countLabel);
+      }
 
       if(currentTopic && currentTopic.id === topic.id && sessionView.classList.contains('active')){
         sessionTopicCountEl.textContent = mine.length;
@@ -1098,6 +1199,12 @@
 
   refresh();
   setInterval(refresh, POLL_MS);
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+    });
+  }
 
   const footerYearEl = document.getElementById('footer-year');
   if(footerYearEl) footerYearEl.textContent = new Date().getFullYear();
